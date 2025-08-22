@@ -15,7 +15,9 @@ fun GemmaTestScreen() {
             modifier = Modifier.fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Text("This is a test text")
+            Text(fetchNameCpp())
         }
     }
 }
+
+external fun fetchNameCpp(): String
