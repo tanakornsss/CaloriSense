@@ -9,6 +9,6 @@ Logging your daily intake locally on the phone too!
 No need for the internet connection.
 
 ## How does my app work?
-This is a simple flowchart of how my app works.\
+This is a simple flowchart of how my app works.
 
 `Camera feed / A photo -> Gemma 3n -> Evaluate the meal -> Output the calorie`
