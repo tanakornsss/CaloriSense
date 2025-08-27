@@ -28,7 +28,6 @@ project("calorisense")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         calorisense.cpp
-        llamacpp/llama_jni_bridge.cpp
 )
 
 # Specifies libraries CMake should link to your target library. You
