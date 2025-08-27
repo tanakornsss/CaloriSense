@@ -1,10 +1,9 @@
-package dev.tanakornsss.calorisense
+package dev.tanakornsss.calorisense.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -15,9 +14,7 @@ fun GemmaTestScreen() {
             modifier = Modifier.fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Text(fetchNameCpp("Hello from Kotlin side. Sent from Kotlin to CPP"))
+
         }
     }
 }
-
-external fun fetchNameCpp(testInput: String): String

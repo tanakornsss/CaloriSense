@@ -1,21 +1,26 @@
 #include <jni.h>
-#include <string>
-#include "llamacpp/llama_jni_bridge.h"
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
+        JNIEnv *env,
+        jclass,
+        jstring input_token
+        ) {
+    // TODO: implement handleTextTokens()
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleImageTokens(
+        JNIEnv *env
+        , jclass clazz
+        ) {
+    // TODO: implement handleImageTokens()
+}
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_dev_tanakornsss_calorisense_GemmaTestScreenKt_fetchNameCpp(
-        JNIEnv *env,
-        jclass,
-        jstring testInput
-        ) {
-    // Retrieve input from Java side
-    const char* inputCStr = env -> GetStringUTFChars(testInput, nullptr);
-    // Parse char* to std::string
-    std::string inputString(inputCStr);
-    // Release inputCStr to free up memory
-    env -> ReleaseStringUTFChars(testInput, inputCStr);
-
-    std::string name = "Hello from CaloriSense\n" + showStringLLaMA() + "\n" + inputString;
-    return env -> NewStringUTF(name.c_str());
+Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(JNIEnv *env, jclass clazz) {
+    // TODO: implement returnOutputTokens()
 }
