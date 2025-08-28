@@ -13,8 +13,8 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
 extern "C"
 JNIEXPORT void JNICALL
 Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleImageTokens(
-        JNIEnv *env
-        , jclass clazz
+        JNIEnv *env,
+        jclass clazz
         ) {
     // TODO: implement handleImageTokens()
 }
