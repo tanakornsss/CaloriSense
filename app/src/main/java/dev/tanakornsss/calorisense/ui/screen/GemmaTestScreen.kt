@@ -1,11 +1,16 @@
 package dev.tanakornsss.calorisense.ui.screen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,12 +30,22 @@ fun GemmaTestScreen() {
 
     Scaffold { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp)
         ) {
             OutlinedTextField(
                 label = { Text("Input your prompt") },
+                trailingIcon = {
+                    Box(modifier =
+                        Modifier
+                            .clickable(onClick = { })
+                            .padding(8.dp)
+                    ) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                    }
+                },
                 value = inputTokenText,
                 onValueChange = { inputTokenText = it },
                 modifier = Modifier.fillMaxWidth()
