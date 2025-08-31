@@ -1,6 +1,5 @@
 package dev.tanakornsss.calorisense.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_9
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.tanakornsss.calorisense.handleTextTokens
 
 @Composable
 fun GemmaTestScreen() {
@@ -42,7 +42,7 @@ fun GemmaTestScreen() {
                     Box(
                         modifier =
                             Modifier
-                                .clickable(onClick = { sendTrigger() })
+                                .clickable(onClick = { handleTextTokens(inputTokenText) })
                                 .padding(8.dp)
                     ) {
                         Icon(
@@ -59,10 +59,6 @@ fun GemmaTestScreen() {
             Text("The output returns here")
         }
     }
-}
-
-private fun sendTrigger() {
-    Log.w("App", "Message send triggered")
 }
 
 @Composable
