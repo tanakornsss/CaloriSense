@@ -1,5 +1,6 @@
 package dev.tanakornsss.calorisense.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,12 +39,16 @@ fun GemmaTestScreen() {
             OutlinedTextField(
                 label = { Text("Input your prompt") },
                 trailingIcon = {
-                    Box(modifier =
-                        Modifier
-                            .clickable(onClick = { })
-                            .padding(8.dp)
+                    Box(
+                        modifier =
+                            Modifier
+                                .clickable(onClick = { sendTrigger() })
+                                .padding(8.dp)
                     ) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Send,
+                            contentDescription = null
+                        )
                     }
                 },
                 value = inputTokenText,
@@ -54,6 +59,10 @@ fun GemmaTestScreen() {
             Text("The output returns here")
         }
     }
+}
+
+private fun sendTrigger() {
+    Log.w("App", "Message send triggered")
 }
 
 @Composable
