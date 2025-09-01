@@ -1,5 +1,4 @@
 #include <jni.h>
-#include <android/log.h>
 #include "util/util_log.h"
 
 extern "C"
