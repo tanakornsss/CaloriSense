@@ -10,7 +10,6 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
         ) {
     // TODO: implement handleTextTokens()
     const char* inputChar = env -> GetStringUTFChars(input_token, nullptr); // Parse input to const char*
-//    __android_log_print(ANDROID_LOG_DEBUG, "JNI", "You said \"%s\"", inputChar);
     LOG_I("You said \"%s\"", inputChar);
     env -> ReleaseStringUTFChars(input_token, inputChar); // Release the now used const char*
 }
