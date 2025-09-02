@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Devices.PIXEL_9
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
+import dev.tanakornsss.calorisense.returnOutputTokens
 
 @Composable
 fun GemmaTestScreen() {
@@ -56,7 +57,7 @@ fun GemmaTestScreen() {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(28.dp))
-            Text("The output returns here")
+            Text(returnOutputTokens())
         }
     }
 }

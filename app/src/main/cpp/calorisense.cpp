@@ -18,13 +18,18 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleImageTokens(
         JNIEnv *env,
-        jclass clazz
+        jclass
         ) {
     // TODO: implement handleImageTokens()
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(JNIEnv *env, jclass clazz) {
+Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(
+        JNIEnv *env,
+        jclass
+        ) {
     // TODO: implement returnOutputTokens()
+    const char* test = "asdf";
+    return env -> NewStringUTF(test);
 }
