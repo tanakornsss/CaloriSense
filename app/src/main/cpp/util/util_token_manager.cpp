@@ -14,7 +14,7 @@ TokenManager& TokenManager::getInstance() {
     return instance;
 }
 
-void TokenManager::setTextToken(const std::string &token) {
+void TokenManager::setTextToken(const std::string& token) {
     std::lock_guard<std::mutex> lock(textTokenMutex);
     textToken = token;
 }

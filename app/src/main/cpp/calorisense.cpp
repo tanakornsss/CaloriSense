@@ -15,7 +15,6 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
     const char* cStr = env -> GetStringUTFChars(input_token, nullptr); // Parse input to const char*
     std::string cppStr(cStr);
     gTextToken = cppStr;
-    LOG_I("%s", gTextToken.c_str());
     env -> ReleaseStringUTFChars(input_token, cStr); // Release the now used const char*
 }
 
