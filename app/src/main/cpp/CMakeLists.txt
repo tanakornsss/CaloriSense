@@ -28,6 +28,7 @@ project("calorisense")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         calorisense.cpp
+        util/util_token_manager.cpp
 )
 
 # Specifies libraries CMake should link to your target library. You
