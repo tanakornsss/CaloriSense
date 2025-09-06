@@ -3,8 +3,6 @@
 #include "util/util_log.h"
 #include "util/util_token_manager.h"
 
-std::string gTextToken; // TODO : Implement mutex
-
 extern "C"
 JNIEXPORT void JNICALL
 Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
