@@ -15,11 +15,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_9
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import dev.tanakornsss.calorisense.returnOutputTokens
 @Composable
 fun GemmaTestScreen() {
     var inputTokenText by remember { mutableStateOf("") }
+    val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
 
     Scaffold { innerPadding ->
         Column(
@@ -43,7 +46,11 @@ fun GemmaTestScreen() {
                     Box(
                         modifier =
                             Modifier
-                                .clickable(onClick = { handleTextTokens(inputTokenText) })
+                                .clickable(
+                                    enabled = canSubmit,
+                                    onClick = { handleTextTokens(inputTokenText)
+                                    })
+                                .alpha(if (!canSubmit) 0.5f else 1.0f)
                                 .padding(8.dp)
                     ) {
                         Icon(
