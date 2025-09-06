@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
 #include "util/util_log.h"
+#include "util/util_token_manager.h"
 
 std::string gTextToken; // TODO : Implement mutex
 
@@ -12,10 +13,12 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
         jstring input_token
         ) {
     // TODO: implement handleTextTokens()
+    TokenManager::getInstance();
     const char* cStr = env -> GetStringUTFChars(input_token, nullptr); // Parse input to const char*
     std::string cppStr(cStr);
-    gTextToken = cppStr;
+    TokenManager::setTextToken(cppStr);
     env -> ReleaseStringUTFChars(input_token, cStr); // Release the now used const char*
+    LOG_I("You typed \"%s\"", TokenManager::getTextToken().c_str());
 }
 
 extern "C"
