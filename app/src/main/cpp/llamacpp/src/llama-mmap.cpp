@@ -2,13 +2,26 @@
 
 #include "llama-impl.h"
 
-#include "ggml.h"
+#include "../ggml/include/ggml.h"
 
 #include <cstring>
 #include <climits>
 #include <stdexcept>
 #include <cerrno>
 #include <algorithm>
+#include <sys/mman.h>
+
+#if defined(__ANDROID__)
+// Android has no POSIX_MADV_* → using MADV_* instead
+#define LLAMA_MADV_WILLNEED MADV_WILLNEED
+#define LLAMA_MADV_RANDOM   MADV_RANDOM
+#define llama_madvise       madvise
+#else
+// Linux/Unix uses POSIX_MADV_*
+    #define LLAMA_MADV_WILLNEED POSIX_MADV_WILLNEED
+    #define LLAMA_MADV_RANDOM   POSIX_MADV_RANDOM
+    #define llama_madvise       posix_madvise
+#endif
 
 #ifdef __has_include
     #if __has_include(<unistd.h>)
@@ -291,13 +304,13 @@ struct llama_mmap::impl {
         }
 
         if (prefetch > 0) {
-            if (posix_madvise(addr, std::min(file->size(), prefetch), POSIX_MADV_WILLNEED)) {
+            if (llama_madvise(addr, std::min(file->size(), prefetch), LLAMA_MADV_WILLNEED)) {
                 LLAMA_LOG_WARN("warning: posix_madvise(.., POSIX_MADV_WILLNEED) failed: %s\n",
                         strerror(errno));
             }
         }
         if (numa) {
-            if (posix_madvise(addr, file->size(), POSIX_MADV_RANDOM)) {
+            if (llama_madvise(addr, file->size(), LLAMA_MADV_RANDOM)) {
                 LLAMA_LOG_WARN("warning: posix_madvise(.., POSIX_MADV_RANDOM) failed: %s\n",
                         strerror(errno));
             }

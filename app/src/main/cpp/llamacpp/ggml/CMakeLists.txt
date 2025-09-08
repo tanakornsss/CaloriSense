@@ -447,3 +447,5 @@ if (MSVC)
         disable_msvc_warnings(test-pool)
     endif ()
 endif()
+
+include_directories(include)

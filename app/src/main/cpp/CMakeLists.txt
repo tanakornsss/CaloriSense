@@ -39,5 +39,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         android
         log)
 
+add_subdirectory(llamacpp)
+
 # Align shared library to 16KB
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
