@@ -266,3 +266,5 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/llama.pc"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 include_directories(include)
+
+set(ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES true)
