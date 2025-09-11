@@ -38,3 +38,9 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(
     const char* test = "asdf";
     return env -> NewStringUTF(test);
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_dev_tanakornsss_calorisense_JNIBridgeKt_pickModel(JNIEnv *env, jclass clazz) {
+    // TODO: implement modelPicker()
+}
