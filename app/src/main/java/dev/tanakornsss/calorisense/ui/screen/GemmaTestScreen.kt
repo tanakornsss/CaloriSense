@@ -1,6 +1,10 @@
 package dev.tanakornsss.calorisense.ui.screen
 
+import android.net.Uri
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,12 +33,26 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
 import dev.tanakornsss.calorisense.returnOutputTokens
+import dev.tanakornsss.calorisense.util.copyModelFile
 
 @Composable
 fun GemmaTestScreen(activity: ComponentActivity) {
     var inputTokenText by remember { mutableStateOf("") }
     val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
-    // TODO : Implement loading model
+
+    // TODO : Pass the model to C++ side
+    val pickModel = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            val file = copyModelFile(activity, it)
+            Toast.makeText(
+                activity,
+                "File ${file.name} loaded",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -71,7 +89,7 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Button(onClick = { }) {
+                Button(onClick = { pickModel.launch(arrayOf("application/octet-stream")) }) {
                     Text("Load model")
                 }
             }
