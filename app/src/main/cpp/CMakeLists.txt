@@ -28,7 +28,12 @@ project("calorisense")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         calorisense.cpp
+        util/util_token_manager.cpp
 )
+
+add_subdirectory(llamacpp)
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
@@ -36,7 +41,10 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 target_link_libraries(${CMAKE_PROJECT_NAME}
         # List libraries link to the target library
         android
-        log)
+        log
+        llama
+        ggml)
 
-# Align shared library to 16KB
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
+set_target_properties(calorisense PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+)

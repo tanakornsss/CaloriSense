@@ -61,6 +61,7 @@ android {
             version = "3.22.1"
         }
     }
+    ndkVersion = "28.2.13676358"
 }
 
 dependencies {

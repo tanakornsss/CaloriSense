@@ -10,6 +10,7 @@ import dev.tanakornsss.calorisense.ui.theme.CaloriSenseTheme
 class MainActivity : ComponentActivity() {
     companion object {
         init {
+            System.loadLibrary("omp")
             System.loadLibrary("calorisense")
         }
     }
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CaloriSenseTheme {
-                GemmaTestScreen()
+                GemmaTestScreen(this)
             }
         }
     }
