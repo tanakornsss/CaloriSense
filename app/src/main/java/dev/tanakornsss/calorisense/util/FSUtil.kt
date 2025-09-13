@@ -25,7 +25,7 @@ fun copyModelFileAsync(context: Context, uri: Uri, onComplete: (File?) -> Unit) 
                 onComplete(outFile)
             }
         }
-        catch (e: Exception) {
+        catch (_: Exception) {
             withContext(Dispatchers.Main) {
                 onComplete(null)
             }
