@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
 import dev.tanakornsss.calorisense.returnOutputTokens
+import dev.tanakornsss.calorisense.ui.component.CustomAlertDialog
 import dev.tanakornsss.calorisense.util.copyModelFileAsync
 
 @Composable
@@ -43,6 +44,8 @@ fun GemmaTestScreen(activity: ComponentActivity) {
     var isCopying by remember { mutableStateOf(false) }
     var copyModelProgress by remember { mutableIntStateOf(0) }
     val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
+
+//    CopyingModelDialog()
 
     // TODO : Pass the model to C++ side
     val pickModel = rememberLauncherForActivityResult(
@@ -123,4 +126,13 @@ fun GemmaTestScreen(activity: ComponentActivity) {
             Text(returnOutputTokens())
         }
     }
+}
+
+@Composable
+private fun CopyingModelDialog() {
+    CustomAlertDialog(
+        onDismissRequest = { },
+        dialogTitle = "Copying model",
+        dialogText = "Progress bar goes here",
+    )
 }
