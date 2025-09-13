@@ -19,12 +19,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,6 +40,8 @@ import dev.tanakornsss.calorisense.util.copyModelFileAsync
 @Composable
 fun GemmaTestScreen(activity: ComponentActivity) {
     var inputTokenText by remember { mutableStateOf("") }
+    var isCopying by remember { mutableStateOf(false) }
+    var copyModelProgress by remember { mutableIntStateOf(0) }
     val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
 
     // TODO : Pass the model to C++ side
@@ -45,22 +49,24 @@ fun GemmaTestScreen(activity: ComponentActivity) {
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
-            copyModelFileAsync(activity, it) { file ->
-                if (file != null) {
-                    Toast.makeText(
-                        activity,
-                        "File is loaded",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            isCopying = true
+            copyModelFileAsync(
+                context = activity,
+                uri = it,
+                onComplete = { file ->
+                    if (file != null) {
+                        Toast.makeText(
+                            activity,
+                            "File ${file.name} is copied",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    isCopying = false
+                },
+                onProgress = { p ->
+                    copyModelProgress = p
                 }
-                else {
-                    Toast.makeText(
-                        activity,
-                        "Error loading file",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
+            )
         }
     }
 
@@ -79,7 +85,8 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                             Modifier
                                 .clickable(
                                     enabled = canSubmit,
-                                    onClick = { handleTextTokens(inputTokenText)
+                                    onClick = {
+                                        handleTextTokens(inputTokenText)
                                     })
                                 .alpha(if (!canSubmit) 0.5f else 1.0f)
                                 .padding(8.dp)
@@ -95,12 +102,21 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(14.dp))
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(onClick = { pickModel.launch(arrayOf("application/octet-stream")) }) {
-                    Text("Load model")
+            Column {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(onClick = { pickModel.launch(arrayOf("application/octet-stream")) }) {
+                        Text("Load model")
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                if (isCopying) {
+                    LinearProgressIndicator(
+                        progress = { copyModelProgress / 100f },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(28.dp))

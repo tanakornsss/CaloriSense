@@ -10,17 +10,59 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-fun copyModelFileAsync(context: Context, uri: Uri, onComplete: (File?) -> Unit) {
+fun copyModelFileAsync(
+    context: Context,
+    uri: Uri,
+    onComplete: (File?) -> Unit,
+    onProgress: (Int) -> Unit
+) {
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            if (!isValidModelFile(context, uri)) throw IllegalArgumentException("This is not a .gguf file")
-            val inputStream = context.contentResolver.openInputStream(uri)!!
-            val outFile = File(context.filesDir, getFileName(context, uri) ?: "placeholder.gguf")
+            if (!isValidModelFile(context, uri)) {
+                withContext(Dispatchers.Main) {
+                    onComplete(null)
+                }
+                return@launch
+            }
+
+            val fileName = getFileName(context, uri) ?: "placeholder.gguf"
+            val outFile = File(context.filesDir, fileName)
+
+            val totalSize = context.contentResolver.openFileDescriptor(uri, "r")?.use {
+                it.statSize
+            } ?: -1L
+
+            val inputStream = context.contentResolver.openInputStream(uri)
+            if (inputStream == null) {
+                withContext(Dispatchers.Main) {
+                    onComplete(null)
+                }
+                return@launch
+            }
+
+            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+            var bytesCopied: Long = 0
+
             inputStream.use { input ->
                 outFile.outputStream().use { output ->
-                    input.copyTo(output)
+                    var bytes = input.read(buffer)
+
+                    while (bytes >= 0) {
+                        output.write(buffer, 0, bytes)
+                        bytesCopied += bytes
+
+                        if (totalSize > 0) {
+                            val progress = (bytesCopied * 100 / totalSize).toInt()
+                            withContext(Dispatchers.Main) {
+                                onProgress(progress)
+                            }
+                        }
+
+                        bytes = input.read(buffer)
+                    }
                 }
             }
+
             withContext(Dispatchers.Main) {
                 onComplete(outFile)
             }
