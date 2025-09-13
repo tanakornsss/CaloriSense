@@ -33,7 +33,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
 import dev.tanakornsss.calorisense.returnOutputTokens
-import dev.tanakornsss.calorisense.util.copyModelFile
+import dev.tanakornsss.calorisense.util.copyModelFileAsync
 
 @Composable
 fun GemmaTestScreen(activity: ComponentActivity) {
@@ -45,12 +45,22 @@ fun GemmaTestScreen(activity: ComponentActivity) {
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
-            val file = copyModelFile(activity, it)
-            Toast.makeText(
-                activity,
-                "File ${file.name} loaded",
-                Toast.LENGTH_SHORT
-            ).show()
+            copyModelFileAsync(activity, it) { file ->
+                if (file != null) {
+                    Toast.makeText(
+                        activity,
+                        "File is loaded",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else {
+                    Toast.makeText(
+                        activity,
+                        "Error loading file",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 

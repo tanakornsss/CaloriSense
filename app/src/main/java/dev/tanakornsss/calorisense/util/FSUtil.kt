@@ -4,18 +4,33 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
-fun copyModelFile(context: Context, uri: Uri): File {
-    if (!isValidModelFile(context, uri)) throw IllegalArgumentException("This is not a .gguf file")
-    val inputStream = context.contentResolver.openInputStream(uri)!!
-    val outFile = File(context.filesDir, getFileName(context, uri) ?: "placeholder.gguf")
-    inputStream.use { input ->
-        outFile.outputStream().use { output ->
-            input.copyTo(output)
+fun copyModelFileAsync(context: Context, uri: Uri, onComplete: (File?) -> Unit) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            if (!isValidModelFile(context, uri)) throw IllegalArgumentException("This is not a .gguf file")
+            val inputStream = context.contentResolver.openInputStream(uri)!!
+            val outFile = File(context.filesDir, getFileName(context, uri) ?: "placeholder.gguf")
+            inputStream.use { input ->
+                outFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            withContext(Dispatchers.Main) {
+                onComplete(outFile)
+            }
+        }
+        catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                onComplete(null)
+            }
         }
     }
-    return outFile
 }
 
 private fun getFileName(context: Context, uri: Uri): String? {
