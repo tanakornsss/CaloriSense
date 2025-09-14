@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,7 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
 import dev.tanakornsss.calorisense.returnOutputTokens
-import dev.tanakornsss.calorisense.ui.component.CustomAlertDialog
+import dev.tanakornsss.calorisense.ui.component.ProgressDialog
 import dev.tanakornsss.calorisense.util.copyModelFileAsync
 
 @Composable
@@ -45,7 +44,7 @@ fun GemmaTestScreen(activity: ComponentActivity) {
     var copyModelProgress by remember { mutableIntStateOf(0) }
     val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
 
-//    CopyingModelDialog()
+    if (isCopying) CopyingModelDialog(copyModelProgress) { }
 
     // TODO : Pass the model to C++ side
     val pickModel = rememberLauncherForActivityResult(
@@ -115,12 +114,6 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
-                if (isCopying) {
-                    LinearProgressIndicator(
-                        progress = { copyModelProgress / 100f },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
             }
             Spacer(modifier = Modifier.height(28.dp))
             Text(returnOutputTokens())
@@ -129,10 +122,13 @@ fun GemmaTestScreen(activity: ComponentActivity) {
 }
 
 @Composable
-private fun CopyingModelDialog() {
-    CustomAlertDialog(
-        onDismissRequest = { },
+private fun CopyingModelDialog(
+    progress: Int,
+    onDismiss: () -> Unit
+) {
+    ProgressDialog(
+        onDismissRequest = { onDismiss() },
         dialogTitle = "Copying model",
-        dialogText = "Progress bar goes here",
+        progress = progress
     )
 }

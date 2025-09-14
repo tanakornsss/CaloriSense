@@ -1,7 +1,12 @@
 package dev.tanakornsss.calorisense.ui.component
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,10 +52,10 @@ fun CustomAlertDialog(
 }
 
 @Composable
-fun CustomAlertDialog(
+fun ProgressDialog(
     onDismissRequest: () -> Unit,
     dialogTitle: String,
-    dialogText: String,
+    progress: Int,
 ) {
     AlertDialog(
         modifier = Modifier.width(400.dp),
@@ -58,7 +63,13 @@ fun CustomAlertDialog(
             Text(text = dialogTitle)
         },
         text = {
-            Text(text = dialogText)
+            Column {
+                Spacer(modifier = Modifier.height(20.dp))
+                LinearProgressIndicator(
+                    progress = { progress / 100f },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         },
         onDismissRequest = {
             onDismissRequest()
