@@ -6,17 +6,19 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-fun copyModelFileAsync(
+fun copyModelFile(
     context: Context,
     uri: Uri,
+    scope: CoroutineScope,
     onComplete: (File?) -> Unit,
     onProgress: (Int) -> Unit
-) {
-    CoroutineScope(Dispatchers.IO).launch {
+): Job {
+    return scope.launch(Dispatchers.IO) {
         try {
             if (!isValidModelFile(context, uri)) {
                 withContext(Dispatchers.Main) {

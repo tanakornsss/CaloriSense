@@ -35,16 +35,25 @@ import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
 import dev.tanakornsss.calorisense.returnOutputTokens
 import dev.tanakornsss.calorisense.ui.component.ProgressDialog
-import dev.tanakornsss.calorisense.util.copyModelFileAsync
+import dev.tanakornsss.calorisense.util.copyModelFile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
 @Composable
 fun GemmaTestScreen(activity: ComponentActivity) {
     var inputTokenText by remember { mutableStateOf("") }
-    var isCopying by remember { mutableStateOf(false) }
-    var copyModelProgress by remember { mutableIntStateOf(0) }
     val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
 
-    if (isCopying) CopyingModelDialog(copyModelProgress) { }
+    var copyJob by remember { mutableStateOf<Job?>(null) }
+    var isCopying by remember { mutableStateOf(false) }
+    var copyModelProgress by remember { mutableIntStateOf(0) }
+
+    if (isCopying) CopyingModelDialog(copyModelProgress) {
+        copyJob?.cancel()
+        isCopying = false
+        copyJob = null
+    }
 
     // TODO : Pass the model to C++ side
     val pickModel = rememberLauncherForActivityResult(
@@ -52,9 +61,10 @@ fun GemmaTestScreen(activity: ComponentActivity) {
     ) { uri: Uri? ->
         uri?.let {
             isCopying = true
-            copyModelFileAsync(
+            copyJob = copyModelFile(
                 context = activity,
                 uri = it,
+                scope = CoroutineScope(Dispatchers.IO),
                 onComplete = { file ->
                     if (file != null) {
                         Toast.makeText(
@@ -64,6 +74,7 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                         ).show()
                     }
                     isCopying = false
+                    copyJob = null
                 },
                 onProgress = { p ->
                     copyModelProgress = p

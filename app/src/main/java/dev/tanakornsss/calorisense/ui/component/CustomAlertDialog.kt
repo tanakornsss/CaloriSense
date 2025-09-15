@@ -71,9 +71,7 @@ fun ProgressDialog(
                 )
             }
         },
-        onDismissRequest = {
-            onDismissRequest()
-        },
+        onDismissRequest = { },
         confirmButton = { },
         dismissButton = {
             TextButton(
