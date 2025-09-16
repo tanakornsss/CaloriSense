@@ -48,9 +48,9 @@ fun GemmaTestScreen(activity: ComponentActivity) {
 
     var copyJob by remember { mutableStateOf<Job?>(null) }
     var isCopying by remember { mutableStateOf(false) }
-    var copyModelProgress by remember { mutableIntStateOf(0) }
+    var loadModelProgress by remember { mutableIntStateOf(0) }
 
-    if (isCopying) CopyingModelDialog(copyModelProgress) {
+    if (isCopying) LoadModelDialog(loadModelProgress) {
         copyJob?.cancel()
         isCopying = false
         copyJob = null
@@ -71,7 +71,7 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                         val success = loadModel(file.absolutePath)
                         Toast.makeText(
                             activity,
-                            if (success) "File ${file.name} is copied"
+                            if (success) "File ${file.name} is loaded"
                             else "Failed to load ${file.name}",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -80,7 +80,7 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                     copyJob = null
                 },
                 onProgress = { p ->
-                    copyModelProgress = p
+                    loadModelProgress = p
                 }
             )
         }
@@ -136,13 +136,13 @@ fun GemmaTestScreen(activity: ComponentActivity) {
 }
 
 @Composable
-private fun CopyingModelDialog(
+private fun LoadModelDialog(
     progress: Int,
     onDismiss: () -> Unit
 ) {
     ProgressDialog(
         onDismissRequest = { onDismiss() },
-        dialogTitle = "Copying model",
+        dialogTitle = "Loading model",
         progress = progress
     )
 }
