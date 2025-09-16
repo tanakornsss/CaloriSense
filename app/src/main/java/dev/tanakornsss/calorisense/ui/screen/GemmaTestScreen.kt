@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import dev.tanakornsss.calorisense.handleTextTokens
+import dev.tanakornsss.calorisense.loadModel
 import dev.tanakornsss.calorisense.returnOutputTokens
 import dev.tanakornsss.calorisense.ui.component.ProgressDialog
 import dev.tanakornsss.calorisense.util.copyModelFile
@@ -67,9 +68,11 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                 scope = CoroutineScope(Dispatchers.IO),
                 onComplete = { file ->
                     if (file != null) {
+                        val success = loadModel(file.absolutePath)
                         Toast.makeText(
                             activity,
-                            "File ${file.name} is copied",
+                            if (success) "File ${file.name} is copied"
+                            else "Failed to load ${file.name}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

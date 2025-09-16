@@ -40,7 +40,11 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(
 }
 
 extern "C"
-JNIEXPORT jstring JNICALL
-Java_dev_tanakornsss_calorisense_JNIBridgeKt_pickModel(JNIEnv *env, jclass clazz) {
+JNIEXPORT jboolean JNICALL
+Java_dev_tanakornsss_calorisense_JNIBridgeKt_loadModel(
+        JNIEnv *env,
+        jclass,
+        jstring path
+        ) {
     // TODO: implement modelPicker()
 }
