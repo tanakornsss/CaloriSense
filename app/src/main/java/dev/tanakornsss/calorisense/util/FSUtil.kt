@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,6 +23,11 @@ fun copyModelFile(
         try {
             if (!isValidModelFile(context, uri)) {
                 withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "Invalid file type, please reselect",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     onComplete(null)
                 }
                 return@launch
