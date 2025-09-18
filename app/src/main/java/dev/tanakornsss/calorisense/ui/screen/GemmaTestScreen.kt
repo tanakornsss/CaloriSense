@@ -37,9 +37,11 @@ import dev.tanakornsss.calorisense.loadModel
 import dev.tanakornsss.calorisense.returnOutputTokens
 import dev.tanakornsss.calorisense.ui.component.ProgressDialog
 import dev.tanakornsss.calorisense.util.copyModelFile
+import dev.tanakornsss.calorisense.util.saveModelFileName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @Composable
 fun GemmaTestScreen(activity: ComponentActivity) {
@@ -68,16 +70,23 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                 scope = CoroutineScope(Dispatchers.IO),
                 onComplete = { file ->
                     if (file != null) {
-                        val success = loadModel(file.absolutePath)
+                        val filePath = file.absolutePath
+                        val success = loadModel(filePath)
+
                         Toast.makeText(
                             activity,
                             if (success) "File ${file.name} is loaded"
                             else "Failed to load ${file.name}",
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            saveModelFileName(activity, filePath)
+                        }
+
+                        isCopying = false
+                        copyJob = null
                     }
-                    isCopying = false
-                    copyJob = null
                 },
                 onProgress = { p ->
                     loadModelProgress = p
