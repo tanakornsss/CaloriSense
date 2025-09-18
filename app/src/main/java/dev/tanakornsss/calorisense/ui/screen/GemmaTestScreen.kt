@@ -23,6 +23,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,20 +39,41 @@ import dev.tanakornsss.calorisense.loadModel
 import dev.tanakornsss.calorisense.returnOutputTokens
 import dev.tanakornsss.calorisense.ui.component.ProgressDialog
 import dev.tanakornsss.calorisense.util.copyModelFile
+import dev.tanakornsss.calorisense.util.readModelFileName
 import dev.tanakornsss.calorisense.util.saveModelFileName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun GemmaTestScreen(activity: ComponentActivity) {
+fun GemmaTestScreen(context: ComponentActivity) {
     var inputTokenText by remember { mutableStateOf("") }
-    val canSubmit = remember { derivedStateOf { inputTokenText.isNotEmpty() } }.value
+    var isModelLoaded by remember { mutableStateOf(false) }
+    val canSubmitText by remember { derivedStateOf { isModelLoaded && inputTokenText.isNotEmpty() } }
 
     var copyJob by remember { mutableStateOf<Job?>(null) }
     var isCopying by remember { mutableStateOf(false) }
     var loadModelProgress by remember { mutableIntStateOf(0) }
+
+    val lastModelPath by readModelFileName(context).collectAsState(initial = "")
+
+    LaunchedEffect(lastModelPath) {
+        withContext(Dispatchers.IO) {
+            lastModelPath?.let { path ->
+                isModelLoaded = loadModel(path)
+            }
+        }
+
+        if (isModelLoaded) {
+            Toast.makeText(
+                context,
+                "Model has been loaded",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     if (isCopying) LoadModelDialog(loadModelProgress) {
         copyJob?.cancel()
@@ -65,7 +88,7 @@ fun GemmaTestScreen(activity: ComponentActivity) {
         uri?.let {
             isCopying = true
             copyJob = copyModelFile(
-                context = activity,
+                context = context,
                 uri = it,
                 scope = CoroutineScope(Dispatchers.IO),
                 onComplete = { file ->
@@ -74,14 +97,14 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                         val success = loadModel(filePath)
 
                         Toast.makeText(
-                            activity,
+                            context,
                             if (success) "File ${file.name} is loaded"
                             else "Failed to load ${file.name}",
                             Toast.LENGTH_SHORT
                         ).show()
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            saveModelFileName(activity, filePath)
+                            saveModelFileName(context, filePath)
                         }
 
                         isCopying = false
@@ -109,11 +132,11 @@ fun GemmaTestScreen(activity: ComponentActivity) {
                         modifier =
                             Modifier
                                 .clickable(
-                                    enabled = canSubmit,
+                                    enabled = canSubmitText,
                                     onClick = {
                                         handleTextTokens(inputTokenText)
                                     })
-                                .alpha(if (!canSubmit) 0.5f else 1.0f)
+                                .alpha(if (!canSubmitText) 0.5f else 1.0f)
                                 .padding(8.dp)
                     ) {
                         Icon(
