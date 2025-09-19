@@ -25,7 +25,7 @@ jobs:
     - name: Build with Gradle
       run: |
         ./gradlew assembleDebug \
-          -Pandroid.injected.signing.store.file=debug.keystore \
+          -Pandroid.injected.signing.store.file=${{ secrets.KEYSTORE_BASE64 }} \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
