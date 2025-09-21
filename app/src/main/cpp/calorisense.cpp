@@ -1,10 +1,12 @@
 #include <jni.h>
 #include <string>
+#include "llama.h"
 #include "util/log/util_log.h"
 #include "util/token_manager/util_token_manager.h"
-#include "llama.h"
+#include "util/generate_response/util_generate_response.h"
 
 static llama_context* ctx = nullptr;
+static std::string out_prompt;
 
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -37,13 +39,12 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
         jclass,
         jstring input_token
         ) {
-    // TODO: implement handleTextTokens()
-    TokenManager::getInstance();
-    const char* cStr = env -> GetStringUTFChars(input_token, nullptr); // Parse input to const char*
-    std::string cppStr(cStr);
-    TokenManager::setTextToken(cppStr);
-    env -> ReleaseStringUTFChars(input_token, cStr); // Release the now used const char*
-    LOG_I("You typed \"%s\"", TokenManager::getTextToken().c_str());
+    // TODO: Implement some sort of mutex to prevent user from submitting new text while generating
+    const char* in_text_c = env -> GetStringUTFChars(input_token, nullptr);
+    std::string in_text_str(in_text_c);
+    out_prompt = generate_response(in_text_str);
+    env -> ReleaseStringUTFChars(input_token, in_text_c);
+    LOG_I("%s", out_prompt.c_str());
 }
 
 extern "C"
