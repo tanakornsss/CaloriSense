@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <string>
-#include "util/util_log.h"
-#include "util/util_token_manager.h"
+#include "util/log/util_log.h"
+#include "util/token_manager/util_token_manager.h"
 #include "llama.h"
 
 static llama_context* ctx = nullptr;
