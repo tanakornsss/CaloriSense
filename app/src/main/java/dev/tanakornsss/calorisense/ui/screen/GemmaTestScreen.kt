@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -55,11 +56,15 @@ fun GemmaTestScreen(context: ComponentActivity) {
 
     var copyJob by remember { mutableStateOf<Job?>(null) }
     var isCopying by remember { mutableStateOf(false) }
+    var isLoadingModelFromCache by remember { mutableStateOf(false) }
     var loadModelProgress by remember { mutableIntStateOf(0) }
+    var isGeneratingResponse by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     val lastModelPath by readModelFileName(context).collectAsState(initial = "")
 
     LaunchedEffect(lastModelPath) {
+        isLoadingModelFromCache = true
         withContext(Dispatchers.IO) {
             lastModelPath?.let { path ->
                 isModelLoaded = loadModel(path)
@@ -73,6 +78,7 @@ fun GemmaTestScreen(context: ComponentActivity) {
                 Toast.LENGTH_SHORT
             ).show()
         }
+        isLoadingModelFromCache = false
     }
 
     if (isCopying) LoadModelDialog(loadModelProgress) {
@@ -80,6 +86,8 @@ fun GemmaTestScreen(context: ComponentActivity) {
         isCopying = false
         copyJob = null
     }
+
+    isLoading = isLoadingModelFromCache || isGeneratingResponse
 
     // TODO : Pass the model to C++ side
     val pickModel = rememberLauncherForActivityResult(
@@ -119,6 +127,7 @@ fun GemmaTestScreen(context: ComponentActivity) {
     }
 
     Scaffold { innerPadding ->
+        if (isLoading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -134,7 +143,11 @@ fun GemmaTestScreen(context: ComponentActivity) {
                                 .clickable(
                                     enabled = canSubmitText,
                                     onClick = {
-                                        handleTextTokens(inputTokenText)
+                                        isGeneratingResponse = true
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            handleTextTokens(inputTokenText)
+                                        }
+                                        isGeneratingResponse = false
                                     })
                                 .alpha(if (!canSubmitText) 0.5f else 1.0f)
                                 .padding(8.dp)
