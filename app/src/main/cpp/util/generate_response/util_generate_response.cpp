@@ -29,6 +29,7 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         // === STEP 0: GET THE AI MODEL COMPONENTS ===
         // Think of these as getting access to different parts of the AI "brain"
 
+        // TODO: Fix crash
         const llama_model* model = llama_get_model(ctx);     // The actual neural network with billions of parameters
         const llama_vocab* vocab = llama_model_get_vocab(model); // The dictionary that converts words ↔ numbers
 

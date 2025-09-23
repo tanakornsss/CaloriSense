@@ -42,7 +42,7 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_handleTextTokens(
     // TODO: Implement some sort of mutex to prevent user from submitting new text while generating
     const char* in_text_c = env -> GetStringUTFChars(input_token, nullptr);
     std::string in_text_str(in_text_c);
-    out_prompt = generate_response(in_text_str);
+    out_prompt = generate_response(in_text_str); // TODO: Fix crash
     env -> ReleaseStringUTFChars(input_token, in_text_c);
     LOG_I("%s", out_prompt.c_str());
 }
