@@ -6,6 +6,8 @@
 #define CALORISENSE_UTIL_GENERATE_RESPONSE_H
 
 #include <string>
+#include <mutex>
+#include <atomic>
 #include "../../llamacpp/src/llama-context.h"
 
 std::string generate_response(
