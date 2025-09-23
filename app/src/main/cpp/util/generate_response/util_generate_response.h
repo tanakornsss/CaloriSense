@@ -8,10 +8,11 @@
 #include <string>
 #include <mutex>
 #include <atomic>
+#include "../log/util_log.h"
 #include "../../llamacpp/src/llama-context.h"
 
 std::string generate_response(
-        const std::string &prompt,
+        const std::string& prompt,
         int maxTokens = 128,
         llama_context* ctx = nullptr
 );
