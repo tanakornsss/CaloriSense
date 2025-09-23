@@ -138,6 +138,11 @@ std::string generate_response(const std::string &prompt, int maxTokens, llama_co
          * "Based on everything I've learned, what should I say next?"
          */
 
+        LOG_I("batch.n_tokens=%d", batch.n_tokens);
+        for (int i = 0; i < batch.n_tokens; i++) {
+            LOG_I("token[%d]=%d", i, batch.token[i]);
+        }
+
         int decode_ret = llama_decode(ctx, batch);
         if (decode_ret != 0) {
             LOG_E("generate_response: llama_decode returned error=%d", decode_ret);

@@ -146,8 +146,10 @@ fun GemmaTestScreen(context: ComponentActivity) {
                                         isGeneratingResponse = true
                                         CoroutineScope(Dispatchers.IO).launch {
                                             handleTextTokens(inputTokenText)
+                                            withContext(Dispatchers.Main) {
+                                                isGeneratingResponse = false
+                                            }
                                         }
-                                        isGeneratingResponse = false
                                     })
                                 .alpha(if (!canSubmitText) 0.5f else 1.0f)
                                 .padding(8.dp)
