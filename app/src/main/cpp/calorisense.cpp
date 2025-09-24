@@ -21,7 +21,7 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_loadModel(
     llama_context_params ctx_params = llama_context_default_params();
 
     llama_model* model = llama_model_load_from_file(path, model_params);
-    if (model == nullptr) {
+    if (!model) {
         env -> ReleaseStringUTFChars(jPath, path);
         return JNI_FALSE;
     }
@@ -63,6 +63,5 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(
         jclass
         ) {
     // TODO: implement returnOutputTokens()
-    const char* test = "The output returns here";
-    return env -> NewStringUTF(test);
+    return env -> NewStringUTF(out_prompt.c_str());
 }

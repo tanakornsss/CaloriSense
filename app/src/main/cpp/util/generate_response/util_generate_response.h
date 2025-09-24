@@ -6,6 +6,7 @@
 #define CALORISENSE_UTIL_GENERATE_RESPONSE_H
 
 #include <string>
+#include <vector>
 #include <mutex>
 #include <atomic>
 #include "../log/util_log.h"
