@@ -157,11 +157,13 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
     catch (const std::exception &e) {
         LOG_E("generate_response: exception: %s", e.what());
         g_generating.store(false);
+        guard_unset();
         return "";
     }
     catch (...) {
         LOG_E("generate_response: unknown exception");
         g_generating.store(false);
+        guard_unset();
         return "";
     }
 }
