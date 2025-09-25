@@ -28,7 +28,8 @@ project("calorisense")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         calorisense.cpp
-        util/util_token_manager.cpp
+        util/token_manager/util_token_manager.cpp
+        util/generate_response/util_generate_response.cpp
 )
 
 add_subdirectory(llamacpp)
