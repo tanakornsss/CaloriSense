@@ -73,24 +73,42 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         LOG_I("tokens is now %lu", tokens.size());
 
         // Initialize batch
+        std::vector<llama_seq_id> seq_ids(n_input, 0);
+
         llama_batch batch = llama_batch_init(std::max(n_input, 1), 0, 1);
         for (int i = 0; i < n_input; i++) {
             batch.token[i] = tokens[i];
             batch.pos[i] = i;
             batch.n_seq_id[i] = 1;
-            batch.seq_id[i] = nullptr;
+            batch.seq_id[i] = &seq_ids[i];
             batch.logits[i] = (i == n_input - 1) ? 1 : 0;
         }
         batch.n_tokens = n_input;
         LOG_I("batch.n_tokens is %d", batch.n_tokens);
 
-//        // Decode initial prompt ; crashed here
-//        if (llama_decode(ctx, batch) != 0) {
-//            LOG_E("Failed to decode initial prompt");
-//            llama_batch_free(batch);
-//            guard_unset();
-//            return "";
-//        }
+        if (!batch.token || !batch.pos || !batch.seq_id || !batch.logits || !batch.n_seq_id) {
+            LOG_E("batch not initialized properly");
+            llama_batch_free(batch);
+            guard_unset();
+            return "";
+        }
+
+        for (int i = 0; i < batch.n_tokens; i++) {
+            if (batch.token[i] < 0 || batch.token[i] >= llama_vocab_n_tokens(vocab)) {
+                LOG_E("Invalid token %d (max=%d)", batch.token[i], llama_vocab_n_tokens(vocab));
+                llama_batch_free(batch);
+                guard_unset();
+                return "";
+            }
+        }
+
+        // Decode initial prompt
+        if (llama_decode(ctx, batch) != 0) {
+            LOG_E("Failed to decode initial prompt");
+            llama_batch_free(batch);
+            guard_unset();
+            return "";
+        }
 
         // Sampling loop & generation
         std::string res;
@@ -102,8 +120,39 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         llama_sampler_chain_add(sampler, llama_sampler_init_temp(0.8f));
         llama_sampler_chain_add(sampler, llama_sampler_init_dist(12345));
 
+        int current_pos = n_input;
+        for (int i = 0; i < maxTokens; i++) {
+            llama_token next_token = llama_sampler_sample(sampler, ctx, -1);
+            llama_sampler_accept(sampler, next_token);
+
+            if (next_token == llama_vocab_eos(vocab)) {
+                guard_unset();
+                break;
+            }
+
+            char buf[256];
+            int len = llama_token_to_piece(vocab, next_token, buf, sizeof(buf), 0, false);
+            if (len > 0) {
+                res.append(buf, len);
+            }
+            LOG_I("%s", res.c_str());
+
+            // Prepare next batch
+            batch.n_tokens = 1;
+            batch.token[0] = next_token;
+            batch.pos[0] = current_pos++;
+            batch.n_seq_id[0] = 1;
+            batch.seq_id[0] = &seq_ids[0];
+            batch.logits[0] = 1;
+
+            if (llama_decode(ctx, batch) != 0) {
+                guard_unset();
+                break;
+            }
+        }
+
         guard_unset();
-        return "completed";
+        return res;
     }
     catch (const std::exception &e) {
         LOG_E("generate_response: exception: %s", e.what());
