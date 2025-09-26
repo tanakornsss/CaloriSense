@@ -52,14 +52,15 @@ import kotlinx.coroutines.withContext
 fun TokenGenScreen(context: Context) {
     var inputTokenText by remember { mutableStateOf("") }
     var isModelLoaded by remember { mutableStateOf(false) }
-    val canSubmitText by remember { derivedStateOf { isModelLoaded && inputTokenText.isNotEmpty() } }
 
     var copyJob by remember { mutableStateOf<Job?>(null) }
     var isCopying by remember { mutableStateOf(false) }
     var isLoadingModelFromCache by remember { mutableStateOf(false) }
     var loadModelProgress by remember { mutableIntStateOf(0) }
     var isGeneratingResponse by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
+
+    val isLoading by remember { derivedStateOf { isLoadingModelFromCache || isGeneratingResponse } }
+    val canSubmitText by remember { derivedStateOf { isModelLoaded && inputTokenText.isNotEmpty() && !isLoading } }
 
     val lastModelPath by readModelFileName(context).collectAsState(initial = "")
 
@@ -87,9 +88,6 @@ fun TokenGenScreen(context: Context) {
         copyJob = null
     }
 
-    isLoading = isLoadingModelFromCache || isGeneratingResponse
-
-    // TODO : Pass the model to C++ side
     val pickModel = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
@@ -104,12 +102,15 @@ fun TokenGenScreen(context: Context) {
                         val filePath = file.absolutePath
                         val success = loadModel(filePath)
 
-                        Toast.makeText(
-                            context,
-                            if (success) "File ${file.name} is loaded"
-                            else "Failed to load ${file.name}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        CoroutineScope(Dispatchers.Main).launch {
+                            isModelLoaded = success
+                            Toast.makeText(
+                                context,
+                                if (success) "File ${file.name} is loaded"
+                                else "Failed to load ${file.name}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
                         CoroutineScope(Dispatchers.IO).launch {
                             saveModelFileName(context, filePath)
