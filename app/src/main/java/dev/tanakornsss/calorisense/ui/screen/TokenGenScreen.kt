@@ -1,8 +1,8 @@
 package dev.tanakornsss.calorisense.ui.screen
 
+import android.content.Context
 import android.net.Uri
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun GemmaTestScreen(context: ComponentActivity) {
+fun TokenGenScreen(context: Context) {
     var inputTokenText by remember { mutableStateOf("") }
     var isModelLoaded by remember { mutableStateOf(false) }
     val canSubmitText by remember { derivedStateOf { isModelLoaded && inputTokenText.isNotEmpty() } }
