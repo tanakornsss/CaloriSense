@@ -1,10 +1,13 @@
 package dev.tanakornsss.calorisense
 
-import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import dev.tanakornsss.calorisense.ui.screen.TokenGenScreen
+import dev.tanakornsss.calorisense.ui.theme.CaloriSenseTheme
 
 @Composable
-fun CaloriSenseApp(context: Context) {
-
+fun CaloriSenseApp(context: ComponentActivity) {
+    CaloriSenseTheme {
+        TokenGenScreen(context)
+    }
 }
