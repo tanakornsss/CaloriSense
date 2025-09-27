@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.tanakornsss.calorisense.ui.nav.CaloriSenseScreen
+import dev.tanakornsss.calorisense.ui.screen.NewTokenGenScreen
 import dev.tanakornsss.calorisense.ui.screen.TokenGenScreen
 import dev.tanakornsss.calorisense.ui.theme.CaloriSenseTheme
 
@@ -16,10 +17,13 @@ fun CaloriSenseApp(context: ComponentActivity) {
     CaloriSenseTheme {
         NavHost(
             navController = navController,
-            startDestination = CaloriSenseScreen.TokenGen.name,
+            startDestination = CaloriSenseScreen.NewTokenGen.name,
         ) {
             composable(CaloriSenseScreen.TokenGen.name) {
                 TokenGenScreen(context)
+            }
+            composable(CaloriSenseScreen.NewTokenGen.name) {
+                NewTokenGenScreen()
             }
         }
     }
