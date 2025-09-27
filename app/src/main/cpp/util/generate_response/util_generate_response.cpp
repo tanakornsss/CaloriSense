@@ -50,12 +50,18 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         }
         LOG_I("Model is %p vocab is %p", (void*) model, (void*) vocab);
 
+        std::string formatted_prompt = prompt_format(prompt);
+        if (formatted_prompt.empty()) {
+            LOG_E("Formatted prompt is empty");
+            return "";
+        }
+
         // Tokenize
         std::vector<llama_token> tokens(prompt.size() + 32);
         int n_input = llama_tokenize(
                 vocab,
-                prompt.c_str(),
-                static_cast<int32_t>(prompt.size()),
+                formatted_prompt.c_str(),
+                static_cast<int32_t>(formatted_prompt.size()),
                 tokens.data(),
                 static_cast<int32_t>(tokens.size()),
                 true,
@@ -154,7 +160,7 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         guard_unset();
         return res;
     }
-    catch (const std::exception &e) {
+    catch (const std::exception& e) {
         LOG_E("generate_response: exception: %s", e.what());
         g_generating.store(false);
         guard_unset();
@@ -169,21 +175,16 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
 }
 
 static std::string prompt_format(const std::string& in_prompt) {
-    llama_chat_message messages[2] {
-            {"system", "You are a helpful assistant."},
-            {"user", "You are a very useful and friendly assistant"}
+    llama_chat_message messages[1] {
+            {"user", in_prompt.c_str()}
     };
 
-    const char* in_prompt_c_str;
     char buf[4096];
 
-    in_prompt_c_str = in_prompt.c_str();
-    strcpy(buf, in_prompt_c_str);
-
     int32_t n_written = llama_chat_apply_template(
-            "chat",
+            "gemma",
             messages,
-            2,
+            1,
             true,
             buf,
             sizeof(buf)
