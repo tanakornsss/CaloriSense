@@ -167,3 +167,32 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         return "";
     }
 }
+
+static std::string prompt_format(const std::string& in_prompt) {
+    llama_chat_message messages[2] {
+            {"system", "You are a helpful assistant."},
+            {"user", "You are a very useful and friendly assistant"}
+    };
+
+    const char* in_prompt_c_str;
+    char buf[4096];
+
+    in_prompt_c_str = in_prompt.c_str();
+    strcpy(buf, in_prompt_c_str);
+
+    int32_t n_written = llama_chat_apply_template(
+            "chat",
+            messages,
+            2,
+            true,
+            buf,
+            sizeof(buf)
+    );
+
+    if (n_written < 0) {
+        return "";
+    }
+    else {
+        return buf;
+    }
+}

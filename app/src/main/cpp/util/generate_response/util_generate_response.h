@@ -18,4 +18,6 @@ std::string generate_response(
         llama_context* ctx = nullptr
 );
 
+static std::string prompt_format(const std::string& in_prompt);
+
 #endif //CALORISENSE_UTIL_GENERATE_RESPONSE_H
