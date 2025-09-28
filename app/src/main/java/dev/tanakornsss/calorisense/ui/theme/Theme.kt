@@ -55,7 +55,7 @@ fun CaloriSenseTheme(content:  @Composable () -> Unit) {
             else -> expressiveLightColorScheme()
         }
 
-    val shapes = Shapes(largeIncreased = RoundedCornerShape(36.0.dp))
+    val shapes = Shapes(largeIncreased = RoundedCornerShape(24.0.dp))
     MaterialExpressiveTheme(colorScheme = colorScheme, shapes = shapes) {
         content()
     }
