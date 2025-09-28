@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.tanakornsss.calorisense"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "prerelease-0.0.1"
@@ -87,5 +87,4 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }

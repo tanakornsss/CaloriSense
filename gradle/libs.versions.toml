@@ -11,7 +11,7 @@ activityCompose = "1.11.0"
 composeBom = "2025.09.01"
 composeIconExtended = "1.7.8"
 composeNav = "2.9.5"
-material3Version = "1.4.0"
+material3Version = "1.5.0-alpha04"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeIconExtended" }
