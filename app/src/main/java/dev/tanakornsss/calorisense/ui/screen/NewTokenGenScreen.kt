@@ -2,6 +2,7 @@ package dev.tanakornsss.calorisense.ui.screen
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,10 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,37 +44,57 @@ fun NewTokenGenScreen() {
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            FloatingTextField()
+            FloatingChatBar()
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun FloatingTextField() {
+private fun FloatingChatBar() {
     var textFieldState by remember { mutableStateOf("") }
     val isDarkMode = isSystemInDarkTheme()
-
     val color = if (isDarkMode) Color.White else Color.Black
+    val textStyle = TextStyle(color = color)
 
     Card(
         shape = MaterialTheme.shapes.largeIncreased,
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(150.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(20.dp).fillMaxSize()
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxSize()
         ) {
-            BasicTextField(
-                value = textFieldState.ifEmpty { "Enter your text" },
-                onValueChange = {
-                    textFieldState = it
-                },
-                textStyle = TextStyle(color = color),
-                cursorBrush = SolidColor(color)
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                BasicTextField(
+                    value = textFieldState,
+                    onValueChange = {
+                        textFieldState = it
+                    },
+                    textStyle = textStyle,
+                    cursorBrush = SolidColor(color),
+                    decorationBox = { innerTextField ->
+                        Box {
+                            if (textFieldState.isEmpty()) Text(
+                                text = "Enter text",
+                                style = textStyle,
+                                color = Color.Gray
+                            )
+                            innerTextField()
+                        }
+                    }
+                )
+                OutlinedIconButton(onClick = { }) {
+                    Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                }
+            }
             // TODO: Change to icon for more compact look
             Row(modifier = Modifier.fillMaxWidth()) {
                 Button(onClick = { }) { Text("Select model") }
