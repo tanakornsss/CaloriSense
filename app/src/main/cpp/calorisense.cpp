@@ -61,6 +61,5 @@ Java_dev_tanakornsss_calorisense_JNIBridgeKt_returnOutputTokens(
         JNIEnv *env,
         jclass
         ) {
-    // TODO: implement returnOutputTokens()
     return env -> NewStringUTF(out_prompt.c_str());
 }

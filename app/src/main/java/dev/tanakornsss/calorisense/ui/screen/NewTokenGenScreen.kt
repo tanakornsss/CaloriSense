@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_9
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun NewTokenGenScreen() {
@@ -58,7 +59,10 @@ private fun FloatingChatBar() {
     var textFieldState by remember { mutableStateOf("") }
     val isDarkMode = isSystemInDarkTheme()
     val color = if (isDarkMode) Color.White else Color.Black
-    val textStyle = TextStyle(color = color)
+    val textStyle = TextStyle(
+        color = color,
+        fontSize = 16.sp,
+    )
 
     Card(
         shape = MaterialTheme.shapes.largeIncreased,
