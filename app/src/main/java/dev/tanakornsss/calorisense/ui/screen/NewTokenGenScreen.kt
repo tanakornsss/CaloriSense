@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.outlined.FileOpen
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -105,9 +107,19 @@ private fun FloatingChatBar() {
                 }
             }
             // TODO: Change to icon for more compact look
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = { }) { Text("Select model") }
-                Button(onClick = { }) { Text("Add image") }
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    shape = MaterialTheme.shapes.medium,
+                    onClick = { }
+                ) {
+                    Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
+                }
+                Button(
+                    shape = MaterialTheme.shapes.medium,
+                    onClick = { }
+                ) {
+                    Icon(imageVector = Icons.Outlined.Image, contentDescription = null)
+                }
             }
         }
     }
