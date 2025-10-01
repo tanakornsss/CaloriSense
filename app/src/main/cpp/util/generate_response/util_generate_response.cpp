@@ -74,9 +74,9 @@ std::string generate_response(const std::string& prompt, int maxTokens, llama_co
         }
         LOG_I("n_input is %d", n_input);
 
-        LOG_I("tokens is initially %lu", tokens.size());
+        LOG_I("tokens is initially %zu", tokens.size());
         tokens.resize(n_input);
-        LOG_I("tokens is now %lu", tokens.size());
+        LOG_I("tokens is now %zu", tokens.size());
 
         // Initialize batch
         std::vector<llama_seq_id> seq_ids(n_input, 0);
