@@ -1,4 +1,4 @@
-package dev.tanakornsss.calorisense.ui.screen
+package dev.tanakornsss.calorisense.ui.nav
 
 import android.content.Context
 import android.net.Uri

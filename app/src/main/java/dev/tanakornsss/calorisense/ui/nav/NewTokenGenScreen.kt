@@ -1,4 +1,4 @@
-package dev.tanakornsss.calorisense.ui.screen
+package dev.tanakornsss.calorisense.ui.nav
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
