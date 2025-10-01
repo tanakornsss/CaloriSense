@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NewTokenGenScreen() {
+fun NewTokenGenScreen(onNavigateManageModel: () -> Unit) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -50,14 +50,16 @@ fun NewTokenGenScreen() {
                 .imePadding()
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            FloatingChatBar()
+            FloatingChatBar {
+                onNavigateManageModel()
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun FloatingChatBar() {
+private fun FloatingChatBar(onNavigateManageModel: () -> Unit) {
     var textFieldState by remember { mutableStateOf("") }
     val isDarkMode = isSystemInDarkTheme()
     val color = if (isDarkMode) Color.White else Color.Black
@@ -106,11 +108,10 @@ private fun FloatingChatBar() {
                     Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
                 }
             }
-            // TODO: Change to icon for more compact look
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     shape = MaterialTheme.shapes.medium,
-                    onClick = { }
+                    onClick = { onNavigateManageModel() }
                 ) {
                     Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
                 }
@@ -128,5 +129,5 @@ private fun FloatingChatBar() {
 @Composable
 @Preview(device = PIXEL_9, showSystemUi = true)
 private fun NewTokenGenScreenPreview() {
-    NewTokenGenScreen()
+    NewTokenGenScreen { }
 }

@@ -26,7 +26,9 @@ fun CaloriSenseApp(context: ComponentActivity) {
                     TokenGenScreen(context)
                 }
                 composable(CaloriSenseScreen.NewTokenGen.name) {
-                    NewTokenGenScreen()
+                    NewTokenGenScreen {
+                        navController.navigate(CaloriSenseScreen.ManageModel.name)
+                    }
                 }
                 composable(CaloriSenseScreen.ManageModel.name) {
                     ManageModelScreen()
